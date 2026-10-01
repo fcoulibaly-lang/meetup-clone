@@ -59,3 +59,9 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Signed-in users can create events they host
+create policy "Signed-in users can create events"
+  on events for insert
+  to authenticated
+  with check ((select auth.uid()) = host_id);

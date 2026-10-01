@@ -6,6 +6,7 @@ type Event = {
   description: string | null;
   location: string;
   starts_at: string;
+  host: { display_name: string | null } | null;
 };
 
 const centralTime = new Intl.DateTimeFormat("en-US", {
@@ -23,7 +24,7 @@ export default async function Home() {
   const supabase = await createClient();
   const { data: events, error } = await supabase
     .from("events")
-    .select("id, title, description, location, starts_at")
+    .select("id, title, description, location, starts_at, host:profiles(display_name)")
     .order("starts_at", { ascending: true })
     .returns<Event[]>();
 
@@ -43,6 +44,9 @@ export default async function Home() {
               <p>{centralTime.format(new Date(event.starts_at))}</p>
               <p>{event.location}</p>
               {event.description && <p>{event.description}</p>}
+              {event.host?.display_name && (
+                <p>Hosted by {event.host.display_name}</p>
+              )}
             </li>
           ))}
         </ul>

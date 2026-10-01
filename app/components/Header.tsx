@@ -25,6 +25,7 @@ export default async function Header() {
         <Link href="/">Meetup clone</Link>{" "}
         {user ? (
           <>
+            <Link href="/events/new">Create event</Link>{" "}
             <span>{displayName}</span>{" "}
             <form action={signOut} style={{ display: "inline" }}>
               <button type="submit">Sign out</button>
