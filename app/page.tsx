@@ -29,7 +29,7 @@ export default async function Home() {
 
   return (
     <main>
-      <h1>Meetup clone</h1>
+      <h1>Upcoming events</h1>
 
       {error && <p>Couldn&apos;t load events: {error.message}</p>}
 
