@@ -65,3 +65,14 @@ create policy "Signed-in users can create events"
   on events for insert
   to authenticated
   with check ((select auth.uid()) = host_id);
+
+-- Signed-in users can RSVP as themselves, and cancel their own RSVP
+create policy "Signed-in users can RSVP as themselves"
+  on rsvps for insert
+  to authenticated
+  with check ((select auth.uid()) = user_id);
+
+create policy "Users can cancel their own RSVP"
+  on rsvps for delete
+  to authenticated
+  using ((select auth.uid()) = user_id);
