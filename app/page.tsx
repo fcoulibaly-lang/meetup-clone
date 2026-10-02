@@ -31,7 +31,7 @@ const centralTime = new Intl.DateTimeFormat("en-US", {
 
 const badgeMonth = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Chicago",
-  month: "short",
+  month: "long",
 });
 
 const badgeDay = new Intl.DateTimeFormat("en-US", {
