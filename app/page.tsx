@@ -34,12 +34,6 @@ const badgeMonth = new Intl.DateTimeFormat("en-US", {
   month: "short",
 });
 
-// "Oct." style; May is already a full word, so it gets no period.
-function shortMonth(date: Date): string {
-  const month = badgeMonth.format(date);
-  return month === "May" ? month : `${month}.`;
-}
-
 const badgeDay = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Chicago",
   day: "numeric",
@@ -97,7 +91,7 @@ export default async function Home() {
               <li key={event.id} className="event-card">
                 <div className="date-badge" aria-hidden="true">
                   <span className="date-badge-month">
-                    {shortMonth(startsAt)}
+                    {badgeMonth.format(startsAt)}
                   </span>
                   <span className="date-badge-day">{badgeDay.format(startsAt)}</span>
                 </div>
