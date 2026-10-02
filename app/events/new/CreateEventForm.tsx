@@ -9,34 +9,29 @@ export default function CreateEventForm() {
   const [state, formAction, pending] = useActionState(createEvent, initialState);
 
   return (
-    <form action={formAction}>
-      <p>
+    <form action={formAction} className="form-fields">
+      <div className="field">
         <label htmlFor="title">Title</label>
-        <br />
         <input id="title" name="title" type="text" required />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="description">Description</label>
-        <br />
         <textarea id="description" name="description" rows={4} />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="location">Location</label>
-        <br />
         <input id="location" name="location" type="text" required />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="date">Date</label>
-        <br />
         <input id="date" name="date" type="date" required />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="time">Start time (Central Time)</label>
-        <br />
         <input id="time" name="time" type="time" required />
-      </p>
-      {state.error && <p role="alert">{state.error}</p>}
-      <button type="submit" disabled={pending}>
+      </div>
+      {state.error && <p role="alert" className="form-error">{state.error}</p>}
+      <button type="submit" disabled={pending} className="pill pill-primary pill-block">
         {pending ? "Creating…" : "Create event"}
       </button>
     </form>

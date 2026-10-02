@@ -20,20 +20,31 @@ export default async function Header() {
   }
 
   return (
-    <header>
+    <header className="site-header">
       <nav>
-        <Link href="/">Meetup clone</Link>{" "}
+        <Link href="/" className="brand">
+          🎉 Meetup clone
+        </Link>
         {user ? (
           <>
-            <Link href="/events/new">Create event</Link>{" "}
-            <span>{displayName}</span>{" "}
-            <form action={signOut} style={{ display: "inline" }}>
-              <button type="submit">Sign out</button>
+            <Link href="/events/new" className="pill pill-primary">
+              Create event
+            </Link>
+            <span className="user-name">{displayName}</span>
+            <form action={signOut}>
+              <button type="submit" className="pill pill-outline pill-small">
+                Sign out
+              </button>
             </form>
           </>
         ) : (
           <>
-            <Link href="/signin">Sign in</Link> <Link href="/signup">Sign up</Link>
+            <Link href="/signin" className="text-link">
+              Sign in
+            </Link>
+            <Link href="/signup" className="pill pill-primary">
+              Sign up
+            </Link>
           </>
         )}
       </nav>

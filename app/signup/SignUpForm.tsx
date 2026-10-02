@@ -9,20 +9,17 @@ export default function SignUpForm() {
   const [state, formAction, pending] = useActionState(signUp, initialState);
 
   return (
-    <form action={formAction}>
-      <p>
+    <form action={formAction} className="form-fields">
+      <div className="field">
         <label htmlFor="display_name">Display name</label>
-        <br />
         <input id="display_name" name="display_name" type="text" required />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="email">Email</label>
-        <br />
         <input id="email" name="email" type="email" autoComplete="email" required />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="password">Password</label>
-        <br />
         <input
           id="password"
           name="password"
@@ -31,9 +28,9 @@ export default function SignUpForm() {
           minLength={6}
           required
         />
-      </p>
-      {state.error && <p role="alert">{state.error}</p>}
-      <button type="submit" disabled={pending}>
+      </div>
+      {state.error && <p role="alert" className="form-error">{state.error}</p>}
+      <button type="submit" disabled={pending} className="pill pill-primary pill-block">
         {pending ? "Signing up…" : "Sign up"}
       </button>
     </form>

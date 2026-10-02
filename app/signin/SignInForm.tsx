@@ -9,15 +9,13 @@ export default function SignInForm() {
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
   return (
-    <form action={formAction}>
-      <p>
+    <form action={formAction} className="form-fields">
+      <div className="field">
         <label htmlFor="email">Email</label>
-        <br />
         <input id="email" name="email" type="email" autoComplete="email" required />
-      </p>
-      <p>
+      </div>
+      <div className="field">
         <label htmlFor="password">Password</label>
-        <br />
         <input
           id="password"
           name="password"
@@ -25,9 +23,9 @@ export default function SignInForm() {
           autoComplete="current-password"
           required
         />
-      </p>
-      {state.error && <p role="alert">{state.error}</p>}
-      <button type="submit" disabled={pending}>
+      </div>
+      {state.error && <p role="alert" className="form-error">{state.error}</p>}
+      <button type="submit" disabled={pending} className="pill pill-primary pill-block">
         {pending ? "Signing in…" : "Sign in"}
       </button>
     </form>

@@ -3,12 +3,14 @@ import SignInForm from "./SignInForm";
 
 export default function SignInPage() {
   return (
-    <main>
-      <h1>Sign in</h1>
-      <SignInForm />
-      <p>
-        New here? <Link href="/signup">Sign up</Link>
-      </p>
+    <main className="form-page">
+      <div className="form-card">
+        <h1>Sign in</h1>
+        <SignInForm />
+        <p className="form-footer">
+          New here? <Link href="/signup" className="text-link">Sign up</Link>
+        </p>
+      </div>
     </main>
   );
 }

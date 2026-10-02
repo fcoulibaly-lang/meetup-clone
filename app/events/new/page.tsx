@@ -10,9 +10,11 @@ export default async function NewEventPage() {
   if (!user) redirect("/signin");
 
   return (
-    <main>
-      <h1>Create event</h1>
-      <CreateEventForm />
+    <main className="form-page">
+      <div className="form-card">
+        <h1>Create event</h1>
+        <CreateEventForm />
+      </div>
     </main>
   );
 }
