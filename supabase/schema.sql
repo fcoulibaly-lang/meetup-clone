@@ -76,3 +76,30 @@ create policy "Users can cancel their own RSVP"
   on rsvps for delete
   to authenticated
   using ((select auth.uid()) = user_id);
+
+-- Only the attendee themselves, or the event's host, can see an RSVP
+drop policy "Anyone can read rsvps" on rsvps;
+
+create policy "Attendees and hosts can read rsvps"
+  on rsvps for select
+  to authenticated
+  using (
+    (select auth.uid()) = user_id
+    or exists (
+      select 1 from events e
+      where e.id = rsvps.event_id
+        and e.host_id = (select auth.uid())
+    )
+  );
+
+-- Everyone can still see HOW MANY people are going (just not who)
+create function public.rsvp_count(p_event_id bigint)
+returns integer
+language sql
+stable
+security definer set search_path = ''
+as $$
+  select count(*)::integer from public.rsvps r where r.event_id = p_event_id;
+$$;
+
+grant execute on function public.rsvp_count(bigint) to anon, authenticated;
