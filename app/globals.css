@@ -479,6 +479,147 @@ main {
   text-align: center;
 }
 
+/* ---------- Comments ---------- */
+
+.comments {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.comments-title {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+.comments-empty,
+.comments-signin {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.comments-signin {
+  margin-top: 4px;
+}
+
+.comment-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 2px 6px rgba(43, 43, 43, 0.05);
+}
+
+.comment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: 0.85rem;
+}
+
+.comment-author {
+  font-weight: 800;
+}
+
+.comment-time {
+  color: var(--muted);
+}
+
+.comment-delete {
+  margin-left: auto;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: var(--coral-dark);
+  text-decoration: underline;
+}
+
+.link-button:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.comment-body {
+  margin-top: 2px;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+}
+
+.comment-form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--charcoal);
+  background: var(--white);
+  padding: 8px 12px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  resize: vertical;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+}
+
+.comment-form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.comment-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.comment-error {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* ---------- Small screens ---------- */
 
 @media (max-width: 600px) {

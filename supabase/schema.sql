@@ -103,3 +103,27 @@ as $$
 $$;
 
 grant execute on function public.rsvp_count(bigint) to anon, authenticated;
+
+-- COMMENTS: what people are saying about each event
+create table comments (
+  id bigint generated always as identity primary key,
+  event_id bigint not null references events(id) on delete cascade,
+  user_id uuid not null references profiles(id) on delete cascade,
+  body text not null check (char_length(body) between 1 and 500),
+  created_at timestamptz default now()
+);
+
+alter table comments enable row level security;
+
+create policy "Anyone can read comments"
+  on comments for select using (true);
+
+create policy "Signed-in users can comment as themselves"
+  on comments for insert
+  to authenticated
+  with check ((select auth.uid()) = user_id);
+
+create policy "Users can delete their own comments"
+  on comments for delete
+  to authenticated
+  using ((select auth.uid()) = user_id);

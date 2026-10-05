@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { deleteComment } from "@/app/actions/comments";
 import { attend, cancelRsvp } from "@/app/actions/rsvps";
+import CommentForm from "@/app/components/CommentForm";
+import { timeAgo } from "@/lib/relativeTime";
 import { createClient } from "@/lib/supabase/server";
 
 type Event = {
@@ -15,6 +18,13 @@ type Event = {
   rsvps: {
     user_id: string;
     attendee: { display_name: string | null } | null;
+  }[];
+  comments: {
+    id: number;
+    user_id: string;
+    body: string;
+    created_at: string;
+    author: { display_name: string | null } | null;
   }[];
 };
 
@@ -49,10 +59,12 @@ export default async function Home() {
     .select(
       `id, title, description, location, starts_at, host_id,
        host:profiles!host_id(display_name),
-       rsvps(user_id, attendee:profiles(display_name))`,
+       rsvps(user_id, attendee:profiles(display_name)),
+       comments(id, user_id, body, created_at, author:profiles(display_name))`,
     )
     .order("starts_at", { ascending: true })
     .order("created_at", { referencedTable: "rsvps", ascending: true })
+    .order("created_at", { referencedTable: "comments", ascending: true })
     .returns<Event[]>();
 
   const counts = new Map<number, number>();
@@ -138,6 +150,53 @@ export default async function Home() {
                       </form>
                     )}
                   </div>
+                  <section className="comments" aria-label={`Comments on ${event.title}`}>
+                    <h3 className="comments-title">
+                      💬 Comments ({event.comments.length})
+                    </h3>
+                    {event.comments.length === 0 ? (
+                      <p className="comments-empty">No comments yet. Be the first! 💬</p>
+                    ) : (
+                      <ul className="comment-list">
+                        {event.comments.map((comment) => (
+                          <li key={comment.id} className="comment">
+                            <div className="comment-meta">
+                              <span className="comment-author">
+                                {comment.author?.display_name ?? "Someone"}
+                              </span>
+                              <span className="comment-time">
+                                <time dateTime={comment.created_at}>
+                                  {timeAgo(comment.created_at)}
+                                </time>
+                              </span>
+                              {user?.id === comment.user_id && (
+                                <form action={deleteComment} className="comment-delete">
+                                  <input
+                                    type="hidden"
+                                    name="comment_id"
+                                    value={comment.id}
+                                  />
+                                  <button type="submit" className="link-button">
+                                    Delete
+                                  </button>
+                                </form>
+                              )}
+                            </div>
+                            <p className="comment-body">{comment.body}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {user ? (
+                      <CommentForm eventId={event.id} />
+                    ) : (
+                      <p className="comments-signin">
+                        <Link href="/signin" className="text-link">
+                          Sign in to comment
+                        </Link>
+                      </p>
+                    )}
+                  </section>
                 </div>
               </li>
             );
