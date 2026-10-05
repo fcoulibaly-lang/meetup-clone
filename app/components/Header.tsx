@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOut } from "@/app/actions/auth";
 import { createClient } from "@/lib/supabase/server";
+import ActionButton from "./ActionButton";
 import DemoButton from "./DemoButton";
 
 export default async function Header() {
@@ -32,23 +33,24 @@ export default async function Header() {
           </Link>
           {user ? (
             <>
-              <Link href="/events/new" className="pill pill-primary">
+              <Link href="/events/new" className="pill pill-primary pill-small">
                 Create event
               </Link>
               <span className="user-name">{displayName}</span>
-              <form action={signOut}>
-                <button type="submit" className="pill pill-outline pill-small">
-                  Sign out
-                </button>
-              </form>
+              <ActionButton
+                action={signOut}
+                label="Sign out"
+                pendingLabel="Signing out…"
+                className="pill pill-outline pill-small"
+              />
             </>
           ) : (
             <>
               <DemoButton />
-              <Link href="/signin" className="text-link">
+              <Link href="/signin" className="text-link header-link">
                 Sign in
               </Link>
-              <Link href="/signup" className="pill pill-primary">
+              <Link href="/signup" className="pill pill-primary pill-small">
                 Sign up
               </Link>
             </>

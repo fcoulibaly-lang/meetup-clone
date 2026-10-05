@@ -429,23 +429,28 @@ main {
 
 /* ---------- Demo login ---------- */
 
-.demo-form {
+.action-form {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 6px;
 }
 
-.demo-form-block {
+.site-header .action-form {
+  align-items: flex-end;
+}
+
+.action-form-block {
   align-items: stretch;
 }
 
-.demo-error {
+.action-error {
   max-width: 280px;
+  padding: 6px 12px;
   font-size: 0.875rem;
 }
 
-.demo-form-block .demo-error {
+.action-form-block .action-error {
   max-width: none;
 }
 
@@ -535,6 +540,7 @@ main {
 
 .comment-delete {
   margin-left: auto;
+  align-items: flex-end;
 }
 
 .link-button {
@@ -620,6 +626,57 @@ main {
   white-space: nowrap;
 }
 
+/* ---------- Empty state ---------- */
+
+.empty-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 40px 28px;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.empty-card h2 {
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+}
+
+.empty-card p {
+  color: var(--muted);
+}
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+/* ---------- Form extras ---------- */
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field-hint,
+.field-optional {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.header-link {
+  padding: 6px 4px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 /* ---------- Small screens ---------- */
 
 @media (max-width: 600px) {
@@ -632,8 +689,47 @@ main {
     font-size: 1.35rem;
   }
 
-  .demo-form {
+  /* Comfortable tap targets on phones. */
+  .pill {
+    min-height: 44px;
+  }
+
+  .field input,
+  .field textarea {
+    min-height: 44px;
+  }
+
+  .link-button {
+    padding: 10px 6px;
+    margin: -10px -6px;
+  }
+
+  .header-link {
+    padding: 10px 4px;
+  }
+
+  .brand {
+    padding: 6px 0;
+  }
+
+  .event-actions .text-link,
+  .comments-signin .text-link,
+  .form-footer .text-link,
+  .demo-banner .text-link {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  .site-header .action-form {
     align-items: flex-start;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .empty-card {
+    padding: 28px 18px;
   }
 
   .page-title {

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { ActionState } from "@/lib/actionState";
 import { MAX_COMMENT_LENGTH } from "@/lib/comments";
 import { createClient } from "@/lib/supabase/server";
 
@@ -59,15 +60,20 @@ export async function postComment(
   return { error: null, body: "", attempt };
 }
 
-export async function deleteComment(formData: FormData) {
+export async function deleteComment(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
   const commentId = Number(formData.get("comment_id"));
-  if (!Number.isInteger(commentId) || commentId <= 0) return;
+  if (!Number.isInteger(commentId) || commentId <= 0) {
+    return { error: "Something went wrong. Please refresh the page and try again." };
+  }
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return;
+  if (!user) return { error: "Please sign in to delete your comment." };
 
   // Row-level security also blocks deleting anyone else's comment.
   const { error } = await supabase
@@ -76,7 +82,11 @@ export async function deleteComment(formData: FormData) {
     .eq("id", commentId)
     .eq("user_id", user.id);
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("Deleting comment failed:", error.message);
+    return { error: "Sorry, we couldn't delete your comment. Please try again." };
+  }
 
   revalidatePath("/");
+  return { error: null };
 }

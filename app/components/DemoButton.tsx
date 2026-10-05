@@ -1,29 +1,24 @@
-"use client";
+import { signInAsDemo } from "@/app/actions/auth";
+import ActionButton from "./ActionButton";
 
-import { useActionState } from "react";
-import { signInAsDemo, type AuthState } from "@/app/actions/auth";
+const sizes = {
+  small: { button: "pill pill-outline pill-small", form: "action-form" },
+  regular: { button: "pill pill-outline", form: "action-form" },
+  block: { button: "pill pill-outline pill-block", form: "action-form action-form-block" },
+};
 
-const initialState: AuthState = { error: null };
-
-export default function DemoButton({ block = false }: { block?: boolean }) {
-  const [state, formAction, pending] = useActionState(signInAsDemo, initialState);
-
+export default function DemoButton({
+  size = "small",
+}: {
+  size?: keyof typeof sizes;
+}) {
   return (
-    <form action={formAction} className={block ? "demo-form demo-form-block" : "demo-form"}>
-      <button
-        type="submit"
-        disabled={pending}
-        className={
-          block ? "pill pill-outline pill-block" : "pill pill-outline pill-small"
-        }
-      >
-        {pending ? "Opening the demo…" : "✨ Try the demo"}
-      </button>
-      {state.error && (
-        <p role="alert" className="form-error demo-error">
-          {state.error}
-        </p>
-      )}
-    </form>
+    <ActionButton
+      action={signInAsDemo}
+      label="✨ Try the demo"
+      pendingLabel="Opening the demo…"
+      className={sizes[size].button}
+      formClassName={sizes[size].form}
+    />
   );
 }

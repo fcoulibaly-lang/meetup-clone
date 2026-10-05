@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { deleteComment } from "@/app/actions/comments";
 import { attend, cancelRsvp } from "@/app/actions/rsvps";
+import ActionButton from "@/app/components/ActionButton";
 import CommentForm from "@/app/components/CommentForm";
+import DemoButton from "@/app/components/DemoButton";
 import { timeAgo } from "@/lib/relativeTime";
 import { createClient } from "@/lib/supabase/server";
 
@@ -39,6 +41,9 @@ const centralTime = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
 });
 
+// Events stay listed until 3 hours after they start.
+const SHOW_AFTER_START_MS = 3 * 60 * 60 * 1000;
+
 const badgeMonth = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Chicago",
   month: "short",
@@ -62,6 +67,7 @@ export default async function Home() {
        rsvps(user_id, attendee:profiles(display_name)),
        comments(id, user_id, body, created_at, author:profiles(display_name))`,
     )
+    .gte("starts_at", new Date(Date.now() - SHOW_AFTER_START_MS).toISOString())
     .order("starts_at", { ascending: true })
     .order("created_at", { referencedTable: "rsvps", ascending: true })
     .order("created_at", { referencedTable: "comments", ascending: true })
@@ -85,7 +91,32 @@ export default async function Home() {
 
       {error && <p className="notice">Couldn&apos;t load events: {error.message}</p>}
 
-      {events && events.length === 0 && <p className="notice">No events yet.</p>}
+      {events && events.length === 0 && (
+        <div className="empty-card">
+          <h2>
+            No upcoming events <span className="nowrap">yet 🎈</span>
+          </h2>
+          <p>
+            {user
+              ? "Get things started — your event could be the first one here."
+              : "Check back soon, or jump in and plan something fun."}
+          </p>
+          <div className="empty-actions">
+            {user ? (
+              <Link href="/events/new" className="pill pill-primary">
+                Create the first event
+              </Link>
+            ) : (
+              <>
+                <DemoButton size="regular" />
+                <Link href="/signup" className="pill pill-primary">
+                  Sign up
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {events && events.length > 0 && (
         <ul className="event-list">
@@ -135,19 +166,23 @@ export default async function Home() {
                         Sign in to RSVP
                       </Link>
                     ) : going ? (
-                      <form action={cancelRsvp}>
-                        <input type="hidden" name="event_id" value={event.id} />
-                        <button type="submit" className="pill pill-outline">
-                          Cancel RSVP
-                        </button>
-                      </form>
+                      <ActionButton
+                        key="cancel"
+                        action={cancelRsvp}
+                        fields={{ event_id: event.id }}
+                        label="Cancel RSVP"
+                        pendingLabel="Canceling…"
+                        className="pill pill-outline"
+                      />
                     ) : (
-                      <form action={attend}>
-                        <input type="hidden" name="event_id" value={event.id} />
-                        <button type="submit" className="pill pill-primary">
-                          Attend
-                        </button>
-                      </form>
+                      <ActionButton
+                        key="attend"
+                        action={attend}
+                        fields={{ event_id: event.id }}
+                        label="Attend"
+                        pendingLabel="Saving…"
+                        className="pill pill-primary"
+                      />
                     )}
                   </div>
                   <section className="comments" aria-label={`Comments on ${event.title}`}>
@@ -170,16 +205,14 @@ export default async function Home() {
                                 </time>
                               </span>
                               {user?.id === comment.user_id && (
-                                <form action={deleteComment} className="comment-delete">
-                                  <input
-                                    type="hidden"
-                                    name="comment_id"
-                                    value={comment.id}
-                                  />
-                                  <button type="submit" className="link-button">
-                                    Delete
-                                  </button>
-                                </form>
+                                <ActionButton
+                                  action={deleteComment}
+                                  fields={{ comment_id: comment.id }}
+                                  label="Delete"
+                                  pendingLabel="Deleting…"
+                                  className="link-button"
+                                  formClassName="action-form comment-delete"
+                                />
                               )}
                             </div>
                             <p className="comment-body">{comment.body}</p>

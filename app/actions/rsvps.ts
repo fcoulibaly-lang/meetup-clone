@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { ActionState } from "@/lib/actionState";
 import { createClient } from "@/lib/supabase/server";
 
 function eventIdFrom(formData: FormData): number | null {
@@ -9,9 +10,14 @@ function eventIdFrom(formData: FormData): number | null {
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-export async function attend(formData: FormData) {
+const TRY_AGAIN = "Something went wrong. Please refresh the page and try again.";
+
+export async function attend(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
   const eventId = eventIdFrom(formData);
-  if (!eventId) return;
+  if (!eventId) return { error: TRY_AGAIN };
 
   const supabase = await createClient();
   const {
@@ -24,14 +30,21 @@ export async function attend(formData: FormData) {
     .insert({ event_id: eventId, user_id: user.id });
 
   // 23505 = already RSVP'd (e.g. a double click); nothing to do.
-  if (error && error.code !== "23505") throw new Error(error.message);
+  if (error && error.code !== "23505") {
+    console.error("RSVP failed:", error.message);
+    return { error: "Sorry, we couldn't save your RSVP. Please try again." };
+  }
 
   revalidatePath("/");
+  return { error: null };
 }
 
-export async function cancelRsvp(formData: FormData) {
+export async function cancelRsvp(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
   const eventId = eventIdFrom(formData);
-  if (!eventId) return;
+  if (!eventId) return { error: TRY_AGAIN };
 
   const supabase = await createClient();
   const {
@@ -45,7 +58,11 @@ export async function cancelRsvp(formData: FormData) {
     .eq("event_id", eventId)
     .eq("user_id", user.id);
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("Cancelling RSVP failed:", error.message);
+    return { error: "Sorry, we couldn't cancel your RSVP. Please try again." };
+  }
 
   revalidatePath("/");
+  return { error: null };
 }

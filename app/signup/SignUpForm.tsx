@@ -3,20 +3,35 @@
 import { useActionState } from "react";
 import { signUp, type AuthState } from "@/app/actions/auth";
 
-const initialState: AuthState = { error: null };
+const initialState: AuthState = { error: null, email: "", displayName: "" };
 
 export default function SignUpForm() {
   const [state, formAction, pending] = useActionState(signUp, initialState);
 
   return (
-    <form action={formAction} className="form-fields">
+    // noValidate: the server checks every field so errors appear in the red box.
+    <form action={formAction} className="form-fields" noValidate>
       <div className="field">
         <label htmlFor="display_name">Display name</label>
-        <input id="display_name" name="display_name" type="text" required />
+        <input
+          id="display_name"
+          name="display_name"
+          type="text"
+          autoComplete="nickname"
+          required
+          defaultValue={state.displayName}
+        />
       </div>
       <div className="field">
         <label htmlFor="email">Email</label>
-        <input id="email" name="email" type="email" autoComplete="email" required />
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          defaultValue={state.email}
+        />
       </div>
       <div className="field">
         <label htmlFor="password">Password</label>
@@ -27,7 +42,11 @@ export default function SignUpForm() {
           autoComplete="new-password"
           minLength={6}
           required
+          aria-describedby="password-hint"
         />
+        <p id="password-hint" className="field-hint">
+          At least 6 characters
+        </p>
       </div>
       {state.error && <p role="alert" className="form-error">{state.error}</p>}
       <button type="submit" disabled={pending} className="pill pill-primary pill-block">

@@ -3,16 +3,24 @@
 import { useActionState } from "react";
 import { signIn, type AuthState } from "@/app/actions/auth";
 
-const initialState: AuthState = { error: null };
+const initialState: AuthState = { error: null, email: "", displayName: "" };
 
 export default function SignInForm() {
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
   return (
-    <form action={formAction} className="form-fields">
+    // noValidate: the server checks every field so errors appear in the red box.
+    <form action={formAction} className="form-fields" noValidate>
       <div className="field">
         <label htmlFor="email">Email</label>
-        <input id="email" name="email" type="email" autoComplete="email" required />
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          defaultValue={state.email}
+        />
       </div>
       <div className="field">
         <label htmlFor="password">Password</label>

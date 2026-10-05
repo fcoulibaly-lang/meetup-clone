@@ -11,7 +11,7 @@ export default function CommentForm({ eventId }: { eventId: number }) {
   const inputId = `comment-${eventId}`;
 
   return (
-    <form action={formAction} className="comment-form">
+    <form action={formAction} className="comment-form" noValidate>
       <input type="hidden" name="event_id" value={eventId} />
       <label htmlFor={inputId} className="visually-hidden">
         Write a comment
@@ -26,14 +26,13 @@ export default function CommentForm({ eventId }: { eventId: number }) {
         placeholder="Say something nice…"
         defaultValue={state.body}
       />
+      {state.error && (
+        <p role="alert" className="form-error comment-error">
+          {state.error}
+        </p>
+      )}
       <div className="comment-form-row">
-        {state.error ? (
-          <p role="alert" className="form-error comment-error">
-            {state.error}
-          </p>
-        ) : (
-          <span className="comment-hint">Up to {MAX_COMMENT_LENGTH} characters</span>
-        )}
+        <span className="comment-hint">Up to {MAX_COMMENT_LENGTH} characters</span>
         <button type="submit" disabled={pending} className="pill pill-primary pill-small">
           {pending ? "Posting…" : "Post"}
         </button>

@@ -9,7 +9,7 @@ export default function SignInPage() {
         <h1>Sign in</h1>
         <SignInForm />
         <p className="form-divider">or</p>
-        <DemoButton block />
+        <DemoButton size="block" />
         <p className="form-footer">
           New here? <Link href="/signup" className="text-link">Sign up</Link>
         </p>

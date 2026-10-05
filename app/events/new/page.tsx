@@ -2,6 +2,10 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import CreateEventForm from "./CreateEventForm";
 
+const centralDate = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Chicago",
+});
+
 export default async function NewEventPage() {
   const supabase = await createClient();
   const {
@@ -13,7 +17,7 @@ export default async function NewEventPage() {
     <main className="form-page">
       <div className="form-card">
         <h1>Create event</h1>
-        <CreateEventForm />
+        <CreateEventForm today={centralDate.format(new Date())} />
       </div>
     </main>
   );
