@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DemoButton from "@/app/components/DemoButton";
 import SignUpForm from "./SignUpForm";
 
 export default function SignUpPage() {
@@ -7,6 +8,8 @@ export default function SignUpPage() {
       <div className="form-card">
         <h1>Sign up</h1>
         <SignUpForm />
+        <p className="form-divider">or</p>
+        <DemoButton block />
         <p className="form-footer">
           Already have an account? <Link href="/signin" className="text-link">Sign in</Link>
         </p>
